@@ -18,4 +18,4 @@ Navigation is not covered in this demo.
 
 ## Demo
 
-![iPhone15 Light](readmefiles/demo.png)
+![iPhone15 Light](readmefiles/demo.gif)
