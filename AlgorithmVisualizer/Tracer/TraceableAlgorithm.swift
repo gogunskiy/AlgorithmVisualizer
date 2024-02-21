@@ -8,10 +8,13 @@
 import Foundation
 
 protocol TraceableAlgorithm {
+    var title: String { get }
     func sort(array: [Int], progressBlock: ([Int]) -> ())
 }
 
 struct BubbleSort: TraceableAlgorithm {
+    var title: String = "BubbleSort"
+    
     func sort(array: [Int], progressBlock: ([Int]) -> ()) {
         var array = array
         let size = array.count
@@ -30,6 +33,8 @@ struct BubbleSort: TraceableAlgorithm {
 }
 
 struct InsertionSort: TraceableAlgorithm {
+    var title: String = "InsertionSort"
+    
     func sort(array: [Int], progressBlock: ([Int]) -> ()) {
         var array = array
         guard array.count >= 2 else {

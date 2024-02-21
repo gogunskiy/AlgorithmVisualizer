@@ -9,10 +9,14 @@ import Foundation
 
 struct SectionData: Identifiable {
     var id = UUID()
+    
+    var index: Int
+    var title: String
     var items: [ItemData]
     
-    init(id: UUID = UUID(), items: [ItemData]) {
-        self.id = id
+    init(index: Int, title: String, items: [ItemData]) {
+        self.index = index
+        self.title = title
         self.items = items
     }
 }
@@ -28,8 +32,74 @@ struct ItemData: Identifiable {
 }
 
 final class VisualizerViewModel: ObservableObject {
-    @Published var sections: [SectionData] = Array(0...2).map { index in
-        let items =  Array(0..<10).map { ItemData(value: $0) }
-        return SectionData(items: items)
+    @Published var sections: [SectionData] = []
+    @Published var items: [Int] = [3, 2, 4, 5, 1]
+    
+    let algorithms: [TraceableAlgorithm]
+    
+    var algorithmViewModels: [AlgorithmViewModel] = []
+    
+    init(algorithms: [TraceableAlgorithm]) {
+        self.algorithms = algorithms
+    }
+    
+    func loadData() {
+        buildData()
+        buildSections()
+    }
+    
+    func buildSections() {
+        sections = algorithmViewModels.enumerated().map ({ (index, viewModel) in
+            let items = viewModel.items.map { value in
+                ItemData(value: value)
+            }
+            return SectionData(index: index, title: viewModel.title, items: items)
+        })
+    }
+    
+    func increaseStep(at index: Int) {
+        algorithmViewModels[index].increaseStep()
+        buildSections()
+    }
+    
+    func decreaseStep(at index: Int) {
+        algorithmViewModels[index].decreaseStep()
+        buildSections()
+    }
+    
+    private func buildData() {
+        let tracer = Tracer(array: items)
+        self.algorithmViewModels = algorithms.map {
+            let data = tracer.createSnapshots(for: $0)
+            return AlgorithmViewModel(title: $0.title, data: data)
+        }
+    }
+    
+}
+
+final class AlgorithmViewModel {
+    let title: String
+    let data: [Int: Snapshot]
+    var currentIndex: Int = 0
+    
+    var items: [Int] {
+        data[currentIndex]?.array ?? []
+    }
+    
+    init(title: String, data: [Int : Snapshot]) {
+        self.title = title
+        self.data = data
+    }
+    
+    func increaseStep() {
+        if currentIndex < data.count - 1 {
+            currentIndex += 1
+        }
+    }
+    
+    func decreaseStep() {
+        if currentIndex > 0 {
+            currentIndex -= 1
+        }
     }
 }

@@ -25,7 +25,13 @@ struct VisualizerView: View {
                 pinnedViews: [.sectionHeaders, .sectionFooters]
             ) {
                 ForEach(viewModel.sections) { section in
-                    Section(header: Text("Section").font(.title)) {
+                    let header = SectionHeaderView(title: section.title) {
+                        viewModel.increaseStep(at: section.index)
+                    } decreaseAction: {
+                        viewModel.decreaseStep(at: section.index)
+                    }
+
+                    Section(header: header) {
                         ForEach(section.items) { item in
                             Text("\(item.value)")
                                 .frame(width: 32, height: 32, alignment: .center)
@@ -35,10 +41,37 @@ struct VisualizerView: View {
                     }
                 }
             }
+        }.onAppear {
+            viewModel.loadData()
         }
     }
 }
 
 #Preview {
-    VisualizerView(viewModel: VisualizerViewModel())
+    VisualizerView(viewModel: VisualizerViewModel(algorithms: [BubbleSort(), InsertionSort()]))
+}
+
+struct SectionHeaderView: View {
+    let title: String
+    let increaseAction: () -> Void
+    let decreaseAction: () -> Void
+
+    var body: some View {
+        VStack {
+            Text(title).font(.title)
+            HStack {
+                Button {
+                    decreaseAction()
+                } label: {
+                    Text("Previous")
+                }
+                Spacer()
+                Button {
+                    increaseAction()
+                } label: {
+                    Text("Next")
+                }
+            }
+        }.padding()
+    }
 }
