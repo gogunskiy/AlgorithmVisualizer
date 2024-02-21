@@ -11,7 +11,7 @@ import SwiftUI
 struct AlgorithmVisualizerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            VisualizerView(viewModel: VisualizerViewModel())
         }
     }
 }
