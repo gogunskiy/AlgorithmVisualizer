@@ -50,17 +50,6 @@ final class VisualizerViewModel: ObservableObject {
         buildSections()
     }
     
-    func buildSections() {
-        sections = algorithmViewModels.enumerated().map ({ (index, viewModel) in
-            let items = viewModel.items.map { value in
-                ItemData(value: value)
-            }
-            
-            let description = "Step: \(viewModel.currentIndex + 1) from \(viewModel.data.count)"
-            return SectionData(index: index, title: viewModel.title, description: description, items: items)
-        })
-    }
-    
     func increaseStep(at index: Int) {
         algorithmViewModels[index].increaseStep()
         buildSections()
@@ -69,6 +58,17 @@ final class VisualizerViewModel: ObservableObject {
     func decreaseStep(at index: Int) {
         algorithmViewModels[index].decreaseStep()
         buildSections()
+    }
+    
+    private func buildSections() {
+        sections = algorithmViewModels.enumerated().map ({ (index, viewModel) in
+            let items = viewModel.items.map { value in
+                ItemData(value: value)
+            }
+            
+            let description = "Step: \(viewModel.currentIndex + 1) from \(viewModel.data.count)"
+            return SectionData(index: index, title: viewModel.title, description: description, items: items)
+        })
     }
     
     private func buildData() {
