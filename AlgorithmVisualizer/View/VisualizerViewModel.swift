@@ -12,11 +12,13 @@ struct SectionData: Identifiable {
     
     var index: Int
     var title: String
+    var description: String
     var items: [ItemData]
     
-    init(index: Int, title: String, items: [ItemData]) {
+    init(index: Int, title: String, description: String, items: [ItemData]) {
         self.index = index
         self.title = title
+        self.description = description
         self.items = items
     }
 }
@@ -33,7 +35,7 @@ struct ItemData: Identifiable {
 
 final class VisualizerViewModel: ObservableObject {
     @Published var sections: [SectionData] = []
-    @Published var items: [Int] = [3, 2, 4, 5, 1]
+    @Published var items: [Int] = [3, 2, 4, 5, 1, 11, 45, 34, 32, 23, 16, 19, 20]
     
     let algorithms: [TraceableAlgorithm]
     
@@ -53,7 +55,9 @@ final class VisualizerViewModel: ObservableObject {
             let items = viewModel.items.map { value in
                 ItemData(value: value)
             }
-            return SectionData(index: index, title: viewModel.title, items: items)
+            
+            let description = "Step: \(viewModel.currentIndex + 1) from \(viewModel.data.count)"
+            return SectionData(index: index, title: viewModel.title, description: description, items: items)
         })
     }
     

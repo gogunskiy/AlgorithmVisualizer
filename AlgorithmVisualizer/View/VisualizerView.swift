@@ -25,7 +25,8 @@ struct VisualizerView: View {
                 pinnedViews: [.sectionHeaders, .sectionFooters]
             ) {
                 ForEach(viewModel.sections) { section in
-                    let header = SectionHeaderView(title: section.title) {
+                    let header = SectionHeaderView(title: section.title, 
+                                                   description: section.description) {
                         viewModel.increaseStep(at: section.index)
                     } decreaseAction: {
                         viewModel.decreaseStep(at: section.index)
@@ -53,6 +54,7 @@ struct VisualizerView: View {
 
 struct SectionHeaderView: View {
     let title: String
+    let description: String
     let increaseAction: () -> Void
     let decreaseAction: () -> Void
 
@@ -65,6 +67,8 @@ struct SectionHeaderView: View {
                 } label: {
                     Text("Previous")
                 }
+                Spacer()
+                Text(description)
                 Spacer()
                 Button {
                     increaseAction()
